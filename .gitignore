@@ -277,3 +277,6 @@ TSWLatexianTemp*
 
 # Old material
 *.old
+
+# VSC
+.DS_store
