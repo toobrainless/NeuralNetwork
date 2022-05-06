@@ -280,3 +280,9 @@ TSWLatexianTemp*
 
 # VSC
 .DS_store
+
+# Clion
+.idea
+
+# Cmake
+cmake-build-debug
