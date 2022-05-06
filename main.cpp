@@ -1,18 +1,15 @@
-#include <iostream>
 #include <Eigen/Dense>
+#include <iostream>
 
 using Eigen::MatrixXd;
+using Eigen::VectorXd;
 
-int main()
-{
-    MatrixXd m(2,2);
-    m(0,0) = 3;
-    m(1,0) = 2.5;
-    m(0,1) = -1;
-    m(1,1) = m(1,0) + m(0,1);
-
-    MatrixXd m1(2,2);
-    m1(0,0) = 3;
-    m1(1,1) = 3;
-    std::cout << m * m1 << std::endl;
+int main() {
+  MatrixXd m(3, 3);
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      m(i, j) = i + j;
+    }
+  }
+  std::cout << m({0}, Eigen::placeholders::all) << std::endl;
 }
