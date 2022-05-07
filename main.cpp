@@ -1,15 +1,22 @@
 #include <Eigen/Dense>
 #include <iostream>
+#include <list>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
-int main() {
-  MatrixXd m(3, 3);
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) {
-      m(i, j) = i + j;
+class Tester {
+public:
+    Tester(double kek) : kek_(kek) {
     }
-  }
-  std::cout << m({0}, Eigen::placeholders::all) << std::endl;
+    double kek_;
+
+    void check() {
+        std::cout << (this)->kek_;
+    }
+};
+
+int main() {
+    MatrixXd m = VectorXd::Random(2);
+    std::cout << m << '\n';
 }

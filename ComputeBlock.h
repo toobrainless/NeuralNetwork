@@ -1,32 +1,44 @@
 #pragma once
 #include <Eigen/Core>
 
+struct MatrixSizeType {
+    Eigen::Index height;
+    Eigen::Index width;
+};
+
 class ComputeBlock {
 public:
-  using Matrix = Eigen::MatrixXd;
-  using Vector = Eigen::VectorXd;
-  using StepType = double;
+    using Matrix = Eigen::MatrixXd;
+    using Vector = Eigen::VectorXd;
+    using StepType = double;
 
-  Vector evaluate(const Vector &x) { return A_ * x + b_; }
+    ComputeBlock() = default;
 
-  Vector predict(const Vector &x);
+    explicit ComputeBlock(MatrixSizeType shape);
 
-  void train(const Matrix &chain_rule, StepType step);
+    Vector evaluate(const Vector &x) const {
+        return A_ * x + b_;
+    }
 
-  const Matrix &grad_A();
+    Vector predict(const Vector &x) const;
 
-  const Vector &grad_b();
-
-  const Vector &grad_x();
+    void train(const Matrix &chain_rule, StepType step);
 
 private:
-  Matrix A_;
-  Vector b_;
-  Vector current_value_;
-  std::shared_ptr<ComputeBlock> next_ = nullptr;
-  std::shared_ptr<ComputeBlock> previous_ = nullptr;
-  bool is_end_ = false;
-  bool is_begin_ = false;
+    const Matrix &grad_A();
 
-  friend class Net;
+    const Vector &grad_b();
+
+    const Vector &grad_x();
+
+    Matrix A_;
+    Vector b_;
+    MatrixSizeType shape_;
+    Vector current_value_;
+    ComputeBlock *next_ = nullptr;
+    ComputeBlock *previous_ = nullptr;
+    bool is_end_ = false;
+    bool is_begin_ = false;
+
+    friend class Net;
 };
