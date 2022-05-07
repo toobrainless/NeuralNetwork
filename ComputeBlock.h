@@ -12,8 +12,6 @@ public:
     using Vector = Eigen::VectorXd;
     using StepType = double;
 
-    ComputeBlock() = default;
-
     explicit ComputeBlock(MatrixSizeType shape);
 
     Vector evaluate_1d(const Vector &x) {
