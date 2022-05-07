@@ -18,13 +18,13 @@ public:
 
     void feed(const Matrix &x, const Matrix &y);
 
-    Vector predict(const Vector &x) {
-        return begin_->predict(x);
+    Vector predict_1d(const Vector &x) {
+        return begin_->predict_1d(x);
     }
 
-    // Здесь хотим считать предикт сразу для матрицы в которой по строкам/столбцам
-    // (надо понять как лучше) уложены наши параметры
-    Matrix predict(const Matrix &X);
+    Matrix predict_2d(const Matrix &x) {
+        return begin_->predict_2d(x);
+    }
 
     ~Net();
 

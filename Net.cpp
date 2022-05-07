@@ -1,5 +1,10 @@
 #include <Net.h>
 
+namespace {
+using Matrix = Net::Matrix;
+using Vector = Net::Vector;
+}
+
 Net::Net(const LayersShapes &layers, TolerenceType tol, StepType step)
     : layers_(layers), tol_(tol), step_(step) {
     assert(!empty(layers) && "Layers must contain at least one element");
@@ -15,9 +20,15 @@ Net::Net(const LayersShapes &layers, TolerenceType tol, StepType step)
     cur->is_end_ = true;
 }
 
+// В этих матрицах по столбцам лежат x_i -> y_i
 void Net::feed(const Matrix &x, const Matrix &y) {
-    while (loss_.evaluate(predict(x), y) > tol_) {
-        end_->train(loss_.grad_z(predict(x), y), step_);
+    while (loss_.evaluate_2d(predict_2d(x), y) > tol_) {
+        for (size_t i = 0; i < x.cols(); ++i) {
+            Vector z = predict_1d(x(Eigen::all, i));
+            end_->calculate_shift(loss_.grad_z(z, y(Eigen::all, i)));
+        }
+
+        end_->train(step_);
     }
 }
 

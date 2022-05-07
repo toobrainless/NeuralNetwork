@@ -16,13 +16,23 @@ public:
 
     explicit ComputeBlock(MatrixSizeType shape);
 
-    Vector evaluate(const Vector &x) const {
-        return A_ * x + b_;
+    Vector evaluate_1d(const Vector &x) {
+        last_input_ = x;
+        last_output_ = A_ * x + b_;
+        return last_output_;
     }
 
-    Vector predict(const Vector &x) const;
+    Matrix evaluate_2d(const Matrix &x) const {
+        return A_ * x + b_ * Matrix::Constant(1, x.cols(), 1);
+    }
 
-    void train(const Matrix &chain_rule, StepType step);
+    Vector predict_1d(const Vector &x);
+
+    Matrix predict_2d(const Matrix &x) const;
+
+    void train(StepType step);
+
+    void calculate_shift(const Matrix &chain_rule);
 
 private:
     const Matrix &grad_A();
@@ -33,8 +43,11 @@ private:
 
     Matrix A_;
     Vector b_;
+    Matrix A_shift_;
+    Vector b_shift_;
     MatrixSizeType shape_;
-    Vector current_value_;
+    Vector last_input_;
+    Vector last_output_;
     ComputeBlock *next_ = nullptr;
     ComputeBlock *previous_ = nullptr;
     bool is_end_ = false;

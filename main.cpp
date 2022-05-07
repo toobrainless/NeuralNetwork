@@ -17,6 +17,8 @@ public:
 };
 
 int main() {
-    MatrixXd m = VectorXd::Random(2);
+    MatrixXd m = MatrixXd::Constant(1, 5, 1);
     std::cout << m << '\n';
+    std::cout << m.rows() << '\n';
+    std::cout << m.cols() << '\n';
 }
