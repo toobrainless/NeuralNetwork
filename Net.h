@@ -4,35 +4,35 @@
 #include <vector>
 #include <Eigen/Core>
 #include <memory>
+#include <list>
+#include <initializer_list>
 
 class Net {
 public:
-    using Matrix = Eigen::MatrixXd;
-    using Vector = Eigen::VectorXd;
+    using Matrix = ComputeBlock::Matrix;
+    using Vector = ComputeBlock::Vector;
+    using Index = ComputeBlock::Index;
     using CountType = size_t;
     using TolerenceType = double;
-    using StepType = double;
-    using LayersShapes = std::vector<MatrixSizeType>;
+    using LearningRateType = double;
+    using StepType = ComputeBlock::StepType;
 
-    Net(const LayersShapes &layers, TolerenceType tol, StepType step);
+    Net(const std::vector<Index>& layers_sizes, TolerenceType tol, StepType step);
 
-    void feed(const Matrix &x, const Matrix &y);
+    void train(const Matrix& x, const Matrix& y);
 
-    Vector predict_1d(const Vector &x) {
-        return begin_->predict_1d(x);
-    }
+    Vector predict_1d(const Vector& x) const;
 
-    Matrix predict_2d(const Matrix &x) {
-        return begin_->predict_2d(x);
-    }
-
-    ~Net();
+    Matrix predict_2d(const Matrix& x) const;
 
 private:
-    ComputeBlock *begin_;
-    ComputeBlock *end_;
-    LayersShapes layers_;
-    StepType step_ = 350;
+    Vector push_forward(const Vector& x);
+    void push_back(const Vector& x, const Vector& y);
+    void update_parameters(LearningRateType lr);
+    void reset_parameters();
+
+    std::vector<ComputeBlock> layers_;
+    LearningRateType lr_ = 1e-2;
     TolerenceType tol_ = 1e-2;
     LossFunction loss_;
 };

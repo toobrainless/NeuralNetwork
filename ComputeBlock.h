@@ -1,36 +1,41 @@
 #pragma once
+#include "Sigmoid.h"
 #include <Eigen/Core>
-
-struct MatrixSizeType {
-    Eigen::Index height;
-    Eigen::Index width;
-};
 
 class ComputeBlock {
 public:
-    using Matrix = Eigen::MatrixXd;
-    using Vector = Eigen::VectorXd;
+    using Vector = Sigmoid::Vector;
+    using Matrix = Sigmoid::Matrix;
     using StepType = double;
+    using Index = Eigen::Index;
 
-    explicit ComputeBlock(MatrixSizeType shape);
+    ComputeBlock(Index rows, Index cols);
 
-    Vector evaluate_1d(const Vector &x) {
-        last_input_ = x;
-        last_output_ = A_ * x + b_;
-        return last_output_;
+    Vector evaluate_1d(const Vector &x) const {
+        return Sigmoid::evaluate(A_ * x + b_);
     }
 
     Matrix evaluate_2d(const Matrix &x) const {
         return A_ * x + b_ * Matrix::Constant(1, x.cols(), 1);
     }
 
-    Vector predict_1d(const Vector &x);
+    const Vector &push_forward(const Vector &x) {
+        input_ = x;
+        output_ = A_ * x + b_;
+        return output_;
+    }
 
-    Matrix predict_2d(const Matrix &x) const;
+    void update_parameters(double lr) {
+        A_ -= lr * dA_;
+        b_ -= lr * db_;
+    }
 
-    void train(StepType step);
+    void reset_parameters() {
+        dA_.setZero();
+        db_.setZero();
+    }
 
-    void calculate_shift(const Matrix &chain_rule);
+    Matrix push_back(const Matrix &chain_rule);
 
 private:
     const Matrix &grad_A();
@@ -41,15 +46,10 @@ private:
 
     Matrix A_;
     Vector b_;
-    Matrix A_shift_;
-    Vector b_shift_;
-    MatrixSizeType shape_;
-    Vector last_input_;
-    Vector last_output_;
-    ComputeBlock *next_ = nullptr;
-    ComputeBlock *previous_ = nullptr;
-    bool is_end_ = false;
-    bool is_begin_ = false;
-
-    friend class Net;
+    Matrix dA_;
+    Vector db_;
+    Index cols_;
+    Index rows_;
+    Vector input_;
+    Vector output_;
 };

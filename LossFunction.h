@@ -10,7 +10,8 @@ public:
     }
 
     double evaluate_2d(const Matrix &z, const Matrix &y) {
-        assert((z.cols() == y.cols() && z.rows() == y.rows()) && "The shapes of the matrices must match");
+        assert((z.cols() == y.cols() && z.rows() == y.rows()) &&
+               "The shapes of the matrices must match");
         return ((z - y).transpose() * (z - y)).trace() / z.cols();
     }
 

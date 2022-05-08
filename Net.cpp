@@ -3,41 +3,71 @@
 namespace {
 using Matrix = Net::Matrix;
 using Vector = Net::Vector;
-}
+using Index = Net::Index;
+using StepType = Net::StepType;
+}  // namespace
 
-Net::Net(const LayersShapes &layers, TolerenceType tol, StepType step)
-    : layers_(layers), tol_(tol), step_(step) {
-    assert(!empty(layers) && "Layers must contain at least one element");
-    begin_ = new ComputeBlock(layers[0]);
-    begin_->is_begin_ = true;
-    ComputeBlock *cur = begin_;
-    for (size_t i = 1; i < layers.size(); ++i) {
-        assert(layers[i - 1].height == layers[i].width && "Incorrect dimensions");
-        cur->next_ = new ComputeBlock(layers[i]);
-        cur->next_->previous_ = cur;
-        cur = cur->next_;
+Net::Net(const std::vector<Index>& layers_sizes, TolerenceType tol, StepType lr)
+    : tol_(tol), lr_(lr) {
+    assert(layers_sizes.size() >= 2);
+    layers_.reserve(layers_sizes.size() - 1);
+    for (size_t i = 0; i + 1 < layers_sizes.size() - 1; ++i) {
+        layers_.emplace_back(layers_sizes[i + 1], layers_sizes[i]);
     }
-    cur->is_end_ = true;
 }
 
-// В этих матрицах по столбцам лежат x_i -> y_i
-void Net::feed(const Matrix &x, const Matrix &y) {
+Vector Net::predict_1d(const Vector& x) const {
+    Vector arg = x;
+    for (const auto& layer : layers_) {
+        arg = layer.evaluate_1d(arg);
+    }
+    return arg;
+}
+
+Matrix Net::predict_2d(const Matrix& x) const {
+    Vector arg = x;
+    for (const auto& layer : layers_) {
+        arg = layer.evaluate_2d(arg);
+    }
+    return arg;
+}
+
+void Net::train(const Matrix& x, const Matrix& y) {
+    Vector z;
     while (loss_.evaluate_2d(predict_2d(x), y) > tol_) {
         for (size_t i = 0; i < x.cols(); ++i) {
-            Vector z = predict_1d(x(Eigen::all, i));
-            end_->calculate_shift(loss_.grad_z(z, y(Eigen::all, i)));
+            z = push_forward(x(Eigen::all, i));
+            push_back(z, y(Eigen::all, i));
         }
-
-        end_->train(step_);
+        update_parameters(lr_);
+        reset_parameters();
     }
 }
 
-Net::~Net() {
-    ComputeBlock *cur = begin_;
-    ComputeBlock *tmp;
-    while (cur) {
-        tmp = cur;
-        cur = cur->next_;
-        delete tmp;
+Vector Net::push_forward(const Vector& x) {
+    Vector arg = x;
+    for (auto& layer : layers_) {
+        arg = layer.push_forward(arg);
+    }
+
+    return arg;
+};
+
+void Net::push_back(const Vector& z, const Vector& y) {
+    Matrix arg = loss_.grad_z(z, y);
+    for (auto& layer : layers_) {
+        arg = layer.push_back(arg);
+    }
+};
+
+void Net::update_parameters(LearningRateType lr) {
+    for (auto& layer : layers_) {
+        layer.update_parameters(lr);
+    }
+}
+
+void Net::reset_parameters() {
+    for (auto& layer : layers_) {
+        layer.reset_parameters();
     }
 }
