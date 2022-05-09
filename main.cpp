@@ -1,6 +1,7 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include <list>
+#include <cmath>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -22,7 +23,7 @@ int main() {
     m(1, 0) = 5;
     m(0, 1) = 7;
     m(1, 1) = 10;
-    std::cout << 1 / (1 + exp(-m.array())) << '\n';
+    std::cout << pow(m.array(), 2) << '\n';
     std::cout << m << '\n';
 //    std::cout << m.rows() << '\n';
 //    std::cout << m.cols() << '\n';

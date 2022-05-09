@@ -15,8 +15,8 @@ ComputeBlock::ComputeBlock(Index rows, Index cols)
 }
 
 Matrix ComputeBlock::push_back(const Matrix &chain_rule) {
-    dA_ += chain_rule * grad_A();
-    db_ += chain_rule * grad_b();
+    dA_ += grad_A(chain_rule);
+    db_ += grad_b(chain_rule);
 
-    return chain_rule * grad_x();
+    return grad_x(chain_rule);
 }

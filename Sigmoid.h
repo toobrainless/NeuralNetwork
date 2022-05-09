@@ -7,7 +7,11 @@ public:
     using Matrix = Eigen::MatrixXd;
     using Vector = Eigen::VectorXd;
 
-    static Vector evaluate(const Vector& x) {
+    static Matrix evaluate(const Matrix& x) {
         return 1 / (1 + exp(-x.array()));
+    }
+
+    static Matrix derivative(const Vector& x) {
+        return (exp(-x.array())) / pow(exp(-x.array()) + 1, 2);
     }
 };

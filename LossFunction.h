@@ -15,5 +15,7 @@ public:
         return ((z - y).transpose() * (z - y)).trace() / z.cols();
     }
 
-    Vector grad_z(const Vector &z, const Vector &y);
+    Vector grad_z(const Vector &z, const Vector &y) {
+        return 2 * (z - y);
+    };
 };

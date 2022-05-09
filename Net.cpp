@@ -4,10 +4,10 @@ namespace {
 using Matrix = Net::Matrix;
 using Vector = Net::Vector;
 using Index = Net::Index;
-using StepType = Net::StepType;
+using StepType = Net::LearningRateType;
 }  // namespace
 
-Net::Net(const std::vector<Index>& layers_sizes, TolerenceType tol, StepType lr)
+Net::Net(const std::vector<Index>& layers_sizes, TolerenceType tol, LearningRateType lr)
     : tol_(tol), lr_(lr) {
     assert(layers_sizes.size() >= 2);
     layers_.reserve(layers_sizes.size() - 1);

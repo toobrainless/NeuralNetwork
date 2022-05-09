@@ -14,10 +14,9 @@ public:
     using Index = ComputeBlock::Index;
     using CountType = size_t;
     using TolerenceType = double;
-    using LearningRateType = double;
-    using StepType = ComputeBlock::StepType;
+    using LearningRateType = ComputeBlock::LearningRateType;
 
-    Net(const std::vector<Index>& layers_sizes, TolerenceType tol, StepType step);
+    Net(const std::vector<Index>& layers_sizes, TolerenceType tol, LearningRateType lr_);
 
     void train(const Matrix& x, const Matrix& y);
 

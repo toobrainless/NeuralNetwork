@@ -6,7 +6,7 @@ class ComputeBlock {
 public:
     using Vector = Sigmoid::Vector;
     using Matrix = Sigmoid::Matrix;
-    using StepType = double;
+    using LearningRateType = double;
     using Index = Eigen::Index;
 
     ComputeBlock(Index rows, Index cols);
@@ -16,7 +16,7 @@ public:
     }
 
     Matrix evaluate_2d(const Matrix &x) const {
-        return A_ * x + b_ * Matrix::Constant(1, x.cols(), 1);
+        return Sigmoid::evaluate(A_ * x + b_ * Matrix::Constant(1, x.cols(), 1));
     }
 
     const Vector &push_forward(const Vector &x) {
@@ -25,7 +25,7 @@ public:
         return output_;
     }
 
-    void update_parameters(double lr) {
+    void update_parameters(LearningRateType lr) {
         A_ -= lr * dA_;
         b_ -= lr * db_;
     }
@@ -38,11 +38,17 @@ public:
     Matrix push_back(const Matrix &chain_rule);
 
 private:
-    const Matrix &grad_A();
+    Matrix grad_A(const Matrix &chain_rule) {
+        return Sigmoid::derivative(output_) * chain_rule * input_.transpose();
+    };
 
-    const Vector &grad_b();
+    Vector grad_b(const Matrix &chain_rule) {
+        return Sigmoid::derivative(output_) * chain_rule;
+    }
 
-    const Vector &grad_x();
+    Vector grad_x(const Matrix &chain_rule) {
+        return A_.transpose() * Sigmoid::derivative(output_) * chain_rule;
+    };
 
     Matrix A_;
     Vector b_;
