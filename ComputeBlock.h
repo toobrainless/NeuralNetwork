@@ -30,12 +30,20 @@ public:
         b_ -= lr * db_;
     }
 
-    void reset_parameters() {
+    void reset_grad() {
         dA_.setZero();
         db_.setZero();
     }
 
     Matrix push_back(const Matrix &chain_rule);
+
+    Matrix get_A() {
+        return A_;
+    }
+
+    Vector get_b() {
+        return b_;
+    }
 
 private:
     Matrix grad_A(const Matrix &chain_rule) {

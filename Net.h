@@ -6,6 +6,7 @@
 #include <memory>
 #include <list>
 #include <initializer_list>
+#include <iostream>
 
 class Net {
 public:
@@ -16,7 +17,7 @@ public:
     using TolerenceType = double;
     using LearningRateType = ComputeBlock::LearningRateType;
 
-    Net(const std::vector<Index>& layers_sizes, TolerenceType tol, LearningRateType lr_);
+    Net(const std::vector<Index>& layers_sizes, TolerenceType tol = 1e-2, LearningRateType lr_ = 1e-2);
 
     void train(const Matrix& x, const Matrix& y);
 
@@ -28,10 +29,10 @@ private:
     Vector push_forward(const Vector& x);
     void push_back(const Vector& x, const Vector& y);
     void update_parameters(LearningRateType lr);
-    void reset_parameters();
+    void reset_grad();
 
     std::vector<ComputeBlock> layers_;
-    LearningRateType lr_ = 1e-2;
-    TolerenceType tol_ = 1e-2;
+    LearningRateType lr_;
+    TolerenceType tol_;
     LossFunction loss_;
 };

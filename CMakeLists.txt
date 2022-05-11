@@ -7,7 +7,7 @@ include_directories(.)
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
-add_executable(main main.cpp Sigmoid.cpp ComputeBlock.cpp Net.cpp LossFunction.cpp)
+add_executable(main main.cpp Sigmoid.cpp ComputeBlock.cpp Net.cpp LossFunction.cpp Tests.h)
 #add_executable(main main.cpp)
 target_link_libraries (main Eigen3::Eigen)
 
