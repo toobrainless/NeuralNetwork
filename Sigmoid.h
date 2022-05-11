@@ -12,6 +12,6 @@ public:
     }
 
     static Matrix derivative(const Vector& x) {
-        return (exp(-x.array())) / pow(exp(-x.array()) + 1, 2);
+        return ((exp(-x.array())) / pow(exp(-x.array()) + 1, 2)).matrix().asDiagonal();
     }
 };

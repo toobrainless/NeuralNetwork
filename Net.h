@@ -17,7 +17,7 @@ public:
     using TolerenceType = double;
     using LearningRateType = ComputeBlock::LearningRateType;
 
-    Net(const std::vector<Index>& layers_sizes, TolerenceType tol = 1e-2, LearningRateType lr_ = 1e-2);
+    Net(const std::vector<Index>& layers_sizes, TolerenceType tol = 1e-2, LearningRateType lr_ = 1e-5);
 
     void train(const Matrix& x, const Matrix& y);
 

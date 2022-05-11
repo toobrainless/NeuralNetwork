@@ -36,15 +36,18 @@ Matrix Net::predict_2d(const Matrix& x) const {
 void Net::train(const Matrix& x, const Matrix& y) {
     Vector z;
     double error;
-    int k = 0;
+    size_t k = 0;
     while ((error = loss_.evaluate_2d(predict_2d(x), y)) > tol_) {
+        reset_grad();
         for (size_t i = 0; i < x.cols(); ++i) {
             z = push_forward(x(Eigen::all, i));
             push_back(z, y(Eigen::all, i));
         }
         update_parameters(lr_);
-        reset_grad();
+//        reset_grad();
     }
+
+    std::cout << error << '\n';
 }
 
 Vector Net::push_forward(const Vector& x) {
@@ -58,9 +61,11 @@ Vector Net::push_forward(const Vector& x) {
 
 void Net::push_back(const Vector& z, const Vector& y) {
     Matrix arg = loss_.grad_z(z, y);
+    reverse(layers_.begin(), layers_.end());
     for (auto& layer : layers_) {
         arg = layer.push_back(arg);
     }
+    reverse(layers_.begin(), layers_.end());
 };
 
 void Net::update_parameters(LearningRateType lr) {

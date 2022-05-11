@@ -6,9 +6,7 @@ using Vector = ComputeBlock::Vector;
 }  // namespace
 
 ComputeBlock::ComputeBlock(Index rows, Index cols)
-    : rows_(rows),
-      cols_(cols),
-      A_(Matrix::Random(rows, cols)),
+    : A_(Matrix::Random(rows, cols)),
       b_(Vector::Random(rows)),
       dA_(Matrix::Zero(rows, cols)),
       db_(Vector::Zero(rows)) {

@@ -1,6 +1,7 @@
 #pragma once
 #include "Sigmoid.h"
 #include <Eigen/Core>
+#include <iostream>
 
 class ComputeBlock {
 public:
@@ -21,7 +22,7 @@ public:
 
     const Vector &push_forward(const Vector &x) {
         input_ = x;
-        output_ = A_ * x + b_;
+        output_ = evaluate_1d(x);
         return output_;
     }
 
@@ -45,16 +46,29 @@ public:
         return b_;
     }
 
+    Index rows() const {
+        return A_.rows();
+    }
+
+    Index cols() const {
+        return A_.cols();
+    }
+
 private:
-    Matrix grad_A(const Matrix &chain_rule) {
+    Matrix grad_A(const Vector &chain_rule) {
+//        std::cerr << "grad_A" << '\n';
+//        std::cerr << "[output_] " << "rows = " << output_.rows() << " cols =  " << output_.cols() << '\n';
+//        std::cerr << "[chain_rule] " << "rows = " << chain_rule.rows() << " cols =  " << chain_rule.cols() << '\n';
+//        std::cerr << "[output_] " << "rows = " << output_.rows() << " cols =  " << output_.cols() << '\n';
+//        std::cerr << "[input_.transpose()] " << "rows = " << input_.transpose().rows() << " cols =  " << input_.transpose().cols() << '\n';
         return Sigmoid::derivative(output_) * chain_rule * input_.transpose();
     };
 
-    Vector grad_b(const Matrix &chain_rule) {
+    Vector grad_b(const Vector &chain_rule) {
         return Sigmoid::derivative(output_) * chain_rule;
     }
 
-    Vector grad_x(const Matrix &chain_rule) {
+    Vector grad_x(const Vector &chain_rule) {
         return A_.transpose() * Sigmoid::derivative(output_) * chain_rule;
     };
 
@@ -62,8 +76,6 @@ private:
     Vector b_;
     Matrix dA_;
     Vector db_;
-    Index cols_;
-    Index rows_;
     Vector input_;
     Vector output_;
 };
