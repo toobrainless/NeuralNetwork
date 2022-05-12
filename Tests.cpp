@@ -48,7 +48,8 @@ void test_loss() {
 
 void test_block() {
     {
-        ComputeBlock test(2, 2);
+        ActivationFunction* activation_function = new Sigmoid;
+        ComputeBlock test(2, 2, activation_function);
         test.get_A();
         test.get_b();
         Vector v1 {{1, 1}};
@@ -70,7 +71,8 @@ void test_block() {
                 {4, 6, 2, 1}
         };
 
-        ComputeBlock test(4, 4);
+        ActivationFunction* activation_function = new Sigmoid;
+        ComputeBlock test(4, 4, activation_function);
         Matrix result_A = test.evaluate_2d(A);
         for (size_t i = 0; i < B.cols(); ++i) {
             assert(result_A(Eigen::all, i) == test.evaluate_1d(A(Eigen::all, i)));
@@ -84,7 +86,7 @@ void test_block() {
 }
 
 void test_net() {
-    Net test({2, 3, 1});
+    Net test({2, 1});
     Matrix m1 {
             {1, 2},
             {3, 4}

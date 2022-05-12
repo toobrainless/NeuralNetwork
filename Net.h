@@ -7,6 +7,7 @@
 #include <list>
 #include <initializer_list>
 #include <iostream>
+#include "ActivationFunction.h"
 
 class Net {
 public:
@@ -17,7 +18,7 @@ public:
     using TolerenceType = double;
     using LearningRateType = ComputeBlock::LearningRateType;
 
-    Net(const std::vector<Index>& layers_sizes, TolerenceType tol = 1e-2, LearningRateType lr_ = 1e-5);
+    Net(const std::vector<Index>& layers_sizes, std::string activation_function = "sigmoid", TolerenceType tol = 1e-2, LearningRateType lr_ = 1e-8);
 
     void train(const Matrix& x, const Matrix& y);
 
@@ -35,4 +36,5 @@ private:
     LearningRateType lr_;
     TolerenceType tol_;
     LossFunction loss_;
+    ActivationFunction* activation_function_ = nullptr;
 };

@@ -2,6 +2,7 @@
 #include "Sigmoid.h"
 #include <Eigen/Core>
 #include <iostream>
+#include "ActivationFunction.h"
 
 class ComputeBlock {
 public:
@@ -10,14 +11,14 @@ public:
     using LearningRateType = double;
     using Index = Eigen::Index;
 
-    ComputeBlock(Index rows, Index cols);
+    ComputeBlock(Index rows, Index cols, ActivationFunction* activation_function);
 
     Vector evaluate_1d(const Vector &x) const {
-        return Sigmoid::evaluate(A_ * x + b_);
+        return activation_function_->evaluate(A_ * x + b_);
     }
 
     Matrix evaluate_2d(const Matrix &x) const {
-        return Sigmoid::evaluate(A_ * x + b_ * Matrix::Constant(1, x.cols(), 1));
+        return activation_function_->evaluate(A_ * x + b_ * Matrix::Constant(1, x.cols(), 1));
     }
 
     const Vector &push_forward(const Vector &x) {
@@ -61,15 +62,15 @@ private:
 //        std::cerr << "[chain_rule] " << "rows = " << chain_rule.rows() << " cols =  " << chain_rule.cols() << '\n';
 //        std::cerr << "[output_] " << "rows = " << output_.rows() << " cols =  " << output_.cols() << '\n';
 //        std::cerr << "[input_.transpose()] " << "rows = " << input_.transpose().rows() << " cols =  " << input_.transpose().cols() << '\n';
-        return Sigmoid::derivative(output_) * chain_rule * input_.transpose();
+        return activation_function_->derivative(output_) * chain_rule * input_.transpose();
     };
 
     Vector grad_b(const Vector &chain_rule) {
-        return Sigmoid::derivative(output_) * chain_rule;
+        return activation_function_->derivative(output_) * chain_rule;
     }
 
     Vector grad_x(const Vector &chain_rule) {
-        return A_.transpose() * Sigmoid::derivative(output_) * chain_rule;
+        return A_.transpose() * activation_function_->derivative(output_) * chain_rule;
     };
 
     Matrix A_;
@@ -78,4 +79,5 @@ private:
     Vector db_;
     Vector input_;
     Vector output_;
+    ActivationFunction* activation_function_ = nullptr;
 };
