@@ -8,6 +8,8 @@
 #include <initializer_list>
 #include <iostream>
 #include "ActivationFunction.h"
+#include "Relu.h"
+#include "Sigmoid.h"
 
 class Net {
 public:

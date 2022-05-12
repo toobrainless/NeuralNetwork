@@ -11,6 +11,8 @@ Net::Net(const std::vector<Index>& layers_sizes, std::string activation_function
     : tol_(tol), lr_(lr) {
     if (activation_function == "sigmoid") {
         activation_function_ = new Sigmoid;
+    } else if (activation_function == "relu") {
+        activation_function_ = new Relu;
     } else {
         throw "There isn't such activation function";
     }

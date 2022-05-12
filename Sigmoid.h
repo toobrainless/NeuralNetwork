@@ -9,7 +9,7 @@ public:
     using Vector = ActivationFunction::Vector;
 
     Matrix evaluate(const Matrix& x) override {
-        return 1 / (1 + exp(-x.array()));
+        return (1 / (1 + exp(-x.array()))).matrix();
     }
 
     Matrix derivative(const Vector& x) override {

@@ -1,13 +1,12 @@
 #pragma once
-#include "Sigmoid.h"
 #include <Eigen/Core>
 #include <iostream>
 #include "ActivationFunction.h"
 
 class ComputeBlock {
 public:
-    using Vector = Sigmoid::Vector;
-    using Matrix = Sigmoid::Matrix;
+    using Vector = ActivationFunction::Vector;
+    using Matrix = ActivationFunction::Matrix;
     using LearningRateType = double;
     using Index = Eigen::Index;
 

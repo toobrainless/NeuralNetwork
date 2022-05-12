@@ -86,7 +86,7 @@ void test_block() {
 }
 
 void test_net() {
-    Net test({2, 1});
+    Net test({2, 1}, "relu");
     Matrix m1 {
             {1, 2},
             {3, 4}
