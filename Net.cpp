@@ -57,7 +57,7 @@ void Net::train(const Matrix& x, const Matrix& y) {
 
         ++k;
 
-        if (k % 100000 == 0) {
+        if (k % 2 == 0) {
             k = 1;
             std::cout << error << '\n';
         }

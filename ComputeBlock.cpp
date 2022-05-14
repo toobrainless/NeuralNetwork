@@ -12,14 +12,18 @@ ComputeBlock::ComputeBlock(Index rows, Index cols, ActivationFunction* activatio
       db_(Vector::Zero(rows)),
       activation_function_(activation_function) {
 
-    std::cout << "ComputeBlock::A_ " << A_ << "\n\n";
-    std::cout << "ComputeBlock::b_ " << b_ << "\n\n";
+//    std::cout << "ComputeBlock::A_ " << A_ << "\n\n";
+//    std::cout << "ComputeBlock::b_ " << b_ << "\n\n";
 
 }
 
 Matrix ComputeBlock::push_back(const Matrix &chain_rule) {
     dA_ += grad_A(chain_rule);
+//    std::cout << "grad_A " << grad_A(chain_rule) << "\n\n";
     db_ += grad_b(chain_rule);
-
+//    std::cout << "grad_b " << grad_b(chain_rule) << "\n\n";
+//    std::cout << "grad_x " << grad_x(chain_rule) << "\n\n";
+//    std::cout << "chain_rule " << chain_rule << "\n\n";
+//    exit(1);
     return grad_x(chain_rule);
 }

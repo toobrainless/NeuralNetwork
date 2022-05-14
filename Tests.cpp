@@ -85,22 +85,54 @@ void test_block() {
     }
 }
 
-void test_net() {
-    Net test({2, 1}, "relu");
-    Matrix m1 {
-            {1, 2},
-            {3, 4}
-    };
+void test_sigmoid() {
+    {
+        Net test({3, 4, 2}, "sigmoid");
+        Matrix m1 {
+                {3, 15, 45},
+                {20, 1, 25},
+                {1, 4, 7}
+        };
 
-    Matrix v1 {
-            {0.872, 0.234}
-    };
+        Matrix v1 {
+                {10/120, 2/12, 4/123},
+                {3/9, 4/7, 12/56}
+        };
 
-    test.train(m1, v1);
+        test.train(m1, v1);
+    }
+}
+
+void test_relu() {
+    {
+        Net test({5, 1}, "relu", 1e-6, 1e-4);
+        Matrix m1 {
+                {3, 15, 45, 25},
+                {20, 1, 25, 6},
+                {1, 4, 7, 7},
+                {2, 8, 9, 8},
+                {25, 6, 7, 9}
+        };
+
+        Matrix v1 {
+                {3 + 20 + 1 + 2 + 25, 15 + 1 + 4 + 8 + 6, 45 + 25 + 7 + 9 + 7, 25 + 6 + 7 + 7 + 9},
+        };
+
+        Vector v2 {{1, 2, 3, 4, 5}};
+        Vector v3 {{2, 6, 8, 14, 25}};
+        Vector v4 {{1, 1, 1, 1, 1}};
+
+        test.train(m1, v1);
+
+        std::cout << test.predict_1d(v2) << '\n';
+        std::cout << test.predict_1d(v3) << '\n';
+        std::cout << test.predict_1d(v4) << '\n';
+    }
 }
 
 void test_all() {
     test_loss();
     test_block();
-    test_net();
+//    test_sigmoid();
+    test_relu();
 }

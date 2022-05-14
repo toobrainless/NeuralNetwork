@@ -22,6 +22,8 @@ public:
 
     const Vector &push_forward(const Vector &x) {
         input_ = x;
+//        std::cout << "input_\n" << x << "\n";
+//        std::cout << "A_ * x + b_\n" << A_ * x + b_ << "\n";
         output_ = evaluate_1d(x);
         return output_;
     }
@@ -61,6 +63,8 @@ private:
 //        std::cerr << "[chain_rule] " << "rows = " << chain_rule.rows() << " cols =  " << chain_rule.cols() << '\n';
 //        std::cerr << "[output_] " << "rows = " << output_.rows() << " cols =  " << output_.cols() << '\n';
 //        std::cerr << "[input_.transpose()] " << "rows = " << input_.transpose().rows() << " cols =  " << input_.transpose().cols() << '\n';
+//        std::cout << "output\n" << output_ << "\n\n";
+//        std::cout << "derivative\n" << activation_function_->derivative(output_) << "\n\n";
         return activation_function_->derivative(output_) * chain_rule * input_.transpose();
     };
 
