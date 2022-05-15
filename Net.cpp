@@ -7,19 +7,19 @@ using Index = Net::Index;
 using StepType = Net::LearningRateType;
 }  // namespace
 
-Net::Net(const std::vector<Index>& layers_sizes, std::string activation_function, TolerenceType tol, LearningRateType lr)
+Net::Net(const std::vector<Index>& layers_sizes, const std::vector<std::string>& layers_types, TolerenceType tol, LearningRateType lr)
     : tol_(tol), lr_(lr) {
-    if (activation_function == "sigmoid") {
-        activation_function_ = new Sigmoid;
-    } else if (activation_function == "relu") {
-        activation_function_ = new Relu;
-    } else {
-        throw "There isn't such activation function";
-    }
+//    if (activation_function == "sigmoid") {
+//        activation_function_ = new Sigmoid;
+//    } else if (activation_function == "relu") {
+//        activation_function_ = new Relu;
+//    } else {
+//        throw "There isn't such activation function";
+//    }
     assert(layers_sizes.size() >= 2);
     layers_.reserve(layers_sizes.size() - 1);
     for (size_t i = 0; i + 1 < layers_sizes.size(); ++i) {
-        layers_.emplace_back(layers_sizes[i + 1], layers_sizes[i], activation_function_);
+        layers_.emplace_back(layers_sizes[i + 1], layers_sizes[i], layers_types[i]);
     }
 }
 
@@ -57,7 +57,7 @@ void Net::train(const Matrix& x, const Matrix& y) {
 
         ++k;
 
-        if (k % 2 == 0) {
+        if (k % 10000 == 0) {
             k = 1;
             std::cout << error << '\n';
         }

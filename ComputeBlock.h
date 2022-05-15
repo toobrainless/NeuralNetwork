@@ -2,6 +2,9 @@
 #include <Eigen/Core>
 #include <iostream>
 #include "ActivationFunction.h"
+#include "Relu.h"
+#include "Sigmoid.h"
+#include "Softmax.h"
 
 class ComputeBlock {
 public:
@@ -10,7 +13,7 @@ public:
     using LearningRateType = double;
     using Index = Eigen::Index;
 
-    ComputeBlock(Index rows, Index cols, ActivationFunction* activation_function);
+    ComputeBlock(Index rows, Index cols, std::string activation_function);
 
     Vector evaluate_1d(const Vector &x) const {
         return activation_function_->evaluate(A_ * x + b_);

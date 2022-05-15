@@ -12,4 +12,7 @@ int main() {
 //    Matrix test(Matrix::Random(3, 3));
 //    std::cout << test << '\n';
     test_all();
+
+//    Vector v1 {{2, 1, 0.1}};
+//    std::cout << exp(v1.array())/exp(v1.array()).sum() << '\n';
 }

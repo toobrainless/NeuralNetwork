@@ -5,16 +5,20 @@ using Matrix = ComputeBlock::Matrix;
 using Vector = ComputeBlock::Vector;
 }  // namespace
 
-ComputeBlock::ComputeBlock(Index rows, Index cols, ActivationFunction* activation_function)
+ComputeBlock::ComputeBlock(Index rows, Index cols, std::string activation_function)
     : A_(Matrix::Random(rows, cols)),
       b_(Vector::Random(rows)),
       dA_(Matrix::Zero(rows, cols)),
-      db_(Vector::Zero(rows)),
-      activation_function_(activation_function) {
-
-//    std::cout << "ComputeBlock::A_ " << A_ << "\n\n";
-//    std::cout << "ComputeBlock::b_ " << b_ << "\n\n";
-
+      db_(Vector::Zero(rows)) {
+    if (activation_function == "sigmoid") {
+        activation_function_ = new Sigmoid;
+    } else if (activation_function == "relu") {
+        activation_function_ = new Relu;
+    } else if (activation_function == "softmax") {
+        activation_function_ = new Softmax;
+    } else {
+        throw "there isn't such activation function";
+    }
 }
 
 Matrix ComputeBlock::push_back(const Matrix &chain_rule) {

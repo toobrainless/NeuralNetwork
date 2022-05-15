@@ -8,8 +8,6 @@
 #include <initializer_list>
 #include <iostream>
 #include "ActivationFunction.h"
-#include "Relu.h"
-#include "Sigmoid.h"
 
 class Net {
 public:
@@ -20,7 +18,7 @@ public:
     using TolerenceType = double;
     using LearningRateType = ComputeBlock::LearningRateType;
 
-    Net(const std::vector<Index>& layers_sizes, std::string activation_function = "sigmoid", TolerenceType tol = 1e-5, LearningRateType lr_ = 1e-2);
+    Net(const std::vector<Index>& layers_sizes, const std::vector<std::string>& layers_types, TolerenceType tol = 1e-5, LearningRateType lr_ = 1e-2);
 
     void train(const Matrix& x, const Matrix& y);
 
