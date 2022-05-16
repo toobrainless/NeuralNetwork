@@ -10,6 +10,5 @@ public:
 
     virtual Matrix derivative(const Vector& x) = 0;
 
-    virtual ~ActivationFunction() {
-    };
+    virtual ~ActivationFunction(){};
 };

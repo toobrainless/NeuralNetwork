@@ -7,15 +7,16 @@ using Index = Net::Index;
 using StepType = Net::LearningRateType;
 }  // namespace
 
-Net::Net(const std::vector<Index>& layers_sizes, const std::vector<std::string>& layers_types, TolerenceType tol, LearningRateType lr)
+Net::Net(const std::vector<Index>& layers_sizes, const std::vector<std::string>& layers_types,
+         TolerenceType tol, LearningRateType lr)
     : tol_(tol), lr_(lr) {
-//    if (activation_function == "sigmoid") {
-//        activation_function_ = new Sigmoid;
-//    } else if (activation_function == "relu") {
-//        activation_function_ = new Relu;
-//    } else {
-//        throw "There isn't such activation function";
-//    }
+    //    if (activation_function == "sigmoid") {
+    //        activation_function_ = new Sigmoid;
+    //    } else if (activation_function == "relu") {
+    //        activation_function_ = new Relu;
+    //    } else {
+    //        throw "There isn't such activation function";
+    //    }
     assert(layers_sizes.size() >= 2);
     layers_.reserve(layers_sizes.size() - 1);
     for (size_t i = 0; i + 1 < layers_sizes.size(); ++i) {
@@ -48,7 +49,7 @@ void Net::train(const Matrix& x, const Matrix& y) {
         reset_grad();
         for (size_t i = 0; i < x.cols(); ++i) {
             z = push_forward(x(Eigen::all, i));
-            push_back(z, y(Eigen::all, i));
+            back_propagate(z, y(Eigen::all, i));
         }
 
         if (k == 0) {
@@ -56,14 +57,14 @@ void Net::train(const Matrix& x, const Matrix& y) {
         }
 
         ++k;
-
-        if (k % 10000 == 0) {
-            k = 1;
+        if (k == 200) {
+            break;
+        }
+        if (k % 10 == 0) {
             std::cout << error << '\n';
         }
 
         update_parameters(lr_);
-//        reset_grad();
     }
 
     std::cout << error << '\n';
@@ -78,11 +79,11 @@ Vector Net::push_forward(const Vector& x) {
     return arg;
 };
 
-void Net::push_back(const Vector& z, const Vector& y) {
+void Net::back_propagate(const Vector& z, const Vector& y) {
     Matrix arg = loss_.grad_z(z, y);
     reverse(layers_.begin(), layers_.end());
     for (auto& layer : layers_) {
-        arg = layer.push_back(arg);
+        arg = layer.back_propagate(arg);
     }
     reverse(layers_.begin(), layers_.end());
 };

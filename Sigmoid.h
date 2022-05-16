@@ -2,7 +2,6 @@
 #include <cmath>
 #include "ActivationFunction.h"
 
-
 class Sigmoid : public ActivationFunction {
 public:
     using Matrix = ActivationFunction::Matrix;
