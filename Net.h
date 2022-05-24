@@ -21,8 +21,9 @@ public:
     using BatchSizeType = ComputeBlock::BatchSizeType;
     using LearningRateType = ComputeBlock::LearningRateType;
 
-    Net(const std::vector<Index>& layers_sizes, const std::vector<std::string>& layers_types,
-        EpochType epoch, BatchSizeType batch_size, LearningRateType lr = 1e-2);
+    Net(const std::initializer_list<Index>& layers_sizes,
+        const std::initializer_list<std::string>& layers_types, EpochType epoch,
+        BatchSizeType batch_size, LearningRateType lr = 1e-2);
 
     void train(const Matrix& x, const Matrix& y);
 
@@ -36,7 +37,7 @@ private:
     void update_parameters(LearningRateType lr);
     void reset_grad();
 
-    void generate_batch(size_t batch_size, size_t l, size_t r, std::vector<Index>& ar);
+    static void generate_batch(size_t batch_size, size_t l, size_t r, std::vector<Index>& ar);
 
     std::vector<ComputeBlock> layers_;
     LearningRateType lr_;

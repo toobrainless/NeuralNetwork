@@ -154,7 +154,7 @@ void test_mnist() {
 
     std::cout << "point3\n";
 
-    Net test({784, 16, 16, 10}, {"sigmoid", "sigmoid", "softmax"}, 500, 128, 10);
+    Net test({784, 16, 16, 10}, {"relu", "relu", "softmax"}, 3000, 128, 0.7);
 
     std::cout << "point4\n";
 

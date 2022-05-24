@@ -1,5 +1,7 @@
 #include "ComputeBlock.h"
 
+#include <memory>
+
 namespace {
 using Matrix = ComputeBlock::Matrix;
 using Vector = ComputeBlock::Vector;
@@ -11,11 +13,11 @@ ComputeBlock::ComputeBlock(Index rows, Index cols, std::string activation_functi
       dA_(Matrix::Zero(rows, cols)),
       db_(Vector::Zero(rows)) {
     if (activation_function == "sigmoid") {
-        activation_function_ = new Sigmoid;
+        activation_function_ = std::make_unique<Sigmoid>();
     } else if (activation_function == "relu") {
-        activation_function_ = new Relu;
+        activation_function_ = std::make_unique<Relu>();
     } else if (activation_function == "softmax") {
-        activation_function_ = new Softmax;
+        activation_function_ = std::make_unique<Softmax>();
     } else {
         throw "there isn't such activation function";
     }

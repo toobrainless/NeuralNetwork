@@ -8,13 +8,15 @@ using StepType = Net::LearningRateType;
 using EpochType = Net::EpochType;
 }  // namespace
 
-Net::Net(const std::vector<Index>& layers_sizes, const std::vector<std::string>& layers_types,
-         EpochType epoch, BatchSizeType batch_size, LearningRateType lr)
+Net::Net(const std::initializer_list<Index>& layers_sizes,
+         const std::initializer_list<std::string>& layers_types, EpochType epoch,
+         BatchSizeType batch_size, LearningRateType lr)
     : epoch_(epoch), lr_(lr), batch_size_(batch_size) {
     assert(layers_sizes.size() >= 2);
     layers_.reserve(layers_sizes.size() - 1);
     for (size_t i = 0; i + 1 < layers_sizes.size(); ++i) {
-        layers_.emplace_back(layers_sizes[i + 1], layers_sizes[i], layers_types[i]);
+        layers_.emplace_back(*(layers_sizes.begin() + (i + 1)), *(layers_sizes.begin() + i),
+                             *(layers_types.begin() + i));
     }
 }
 
@@ -85,10 +87,10 @@ void Net::reset_grad() {
 }
 
 void Net::generate_batch(size_t batch_size, size_t l, size_t r, std::vector<Index>& ar) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(l, r);
-    std::vector<Index> ans(batch_size);
+    ar.reserve(batch_size);
     for (auto& num : ar) {
         num = distrib(gen);
     }

@@ -77,5 +77,5 @@ private:
     Vector db_;
     Vector input_;
     Vector output_;
-    ActivationFunction *activation_function_ = nullptr;
+    std::unique_ptr<ActivationFunction> activation_function_ = nullptr;
 };
