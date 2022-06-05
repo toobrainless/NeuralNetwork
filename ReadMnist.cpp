@@ -35,7 +35,7 @@ void ReadMNIST(int NumberOfImages, int DataOfAnImage, std::vector<std::vector<do
             }
         }
     } else {
-        std::cout << "FUCK\n";
+        std::cout << "Can't read MNIST\n";
     }
 }
 
